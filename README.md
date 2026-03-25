@@ -1,2 +1,2 @@
 # Meteor
-A Comperhensive Cyberscurity Framwork MVP
+A Comperhensive Cybersecurity Framwork MVP
