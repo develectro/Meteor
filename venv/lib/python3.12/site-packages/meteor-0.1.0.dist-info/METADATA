@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: meteor
+Version: 0.1.0
+Summary: A modular CLI tool for port scanning, process mapping, log analysis, and Shodan integration.
+Author: Meteor Security
+Requires-Python: >=3.10
+Requires-Dist: psutil>=5.9.0
+Requires-Dist: rich>=13.0.0
+Requires-Dist: shodan>=1.29.0
+Dynamic: author
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
