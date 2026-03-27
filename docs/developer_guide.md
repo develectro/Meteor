@@ -1,75 +1,21 @@
-# Meteor Security CLI: Developer Guide 🛰️
+# Meteor: Developer Guide Entry Point 🛰️⚡
 
-Welcome to the technical deep-dive of **Meteor**. This guide explains the internal architecture, decision-making logic, and offensive security techniques implemented in the tool.
+Welcome to the development ecosystem of **Spark Systems** (برق للأنظمة). 
 
-## 1. High-Level Architecture
+Meteor is built with a focus on **Clean Architecture**, **Stealth**, and **Extensibility**. This document serves as a high-level overview. For deep technical details, architectural blueprints, and the strategic roadmap (including **Mesh-War**), please refer to our full handbook.
 
-Meteor follows a **Clean Architecture** approach, separating the OS-level data retrieval from the core heuristic analysis and the presentation layer (CLI).
+## 📖 [The Spark Systems: Cyber Intel Handbook](dev_book/index.md)
 
-```mermaid
-graph TD
-    subgraph CLI Layer
-        CLI[cli.py]
-    end
+### Quick Reference
+- **Core Engine**: `meteor/core/`
+- **OS Abstraction**: `meteor/providers/`
+- **External Spying**: `meteor/external/`
+- **Security Vault**: `meteor/core/vault.py`
 
-    subgraph Core Engines
-        KC[KillChainAnalyzer]
-        HE[HeuristicEngine]
-        SE[ScannerEngine]
-        SH[ShieldEngine]
-        VA[Vault]
-    end
-
-    subgraph Provider Layer
-        BP[BaseProvider]
-        UP[UbuntuProvider]
-    end
-
-    CLI --> KC
-    KC --> HE
-    HE --> SE
-    SE --> UP
-    UP -.-> BP
-    SH --> UP
-```
-
-## 2. Component Breakdown
-
-### 🛡️ Providers (The OS Abstraction)
-The `providers/` directory contains the logic for interacting with the operating system.
-- **`BaseProvider`**: An abstract interface defining methods like `get_open_ports()`, `get_process_maps()`, and `get_security_logs()`.
-- **`UbuntuProvider`**: Current implementation for Linux/Ubuntu systems. It uses `psutil` for basics and direct `/proc` and `/var/log` access for deep metrics.
-
-### 🔍 Core Engines (The Brains)
-- **`ScannerEngine`**: Handles standard network diagnostics.
-- **`DeepScanner`**: Performs raw SYN scanning using `scapy` and validates process integrity via memory-file correlation.
-- **`HeuristicEngine`**: Correlates ports to processes. It marks a process as **Red** if access to its executable path is denied—a common indicator of rootkits or process hollowing.
-
-## 3. Advanced Security Techniques
-
-### 🧠 Process Hollowing Detection
-Meteor doesn't just check if the executable exists on disk. In **Combat Mode**, it reads `/proc/[pid]/maps` and identifies memory regions with the `x` (executable) bit set but no backing file on disk. These "Anonymous" executable regions are high-confidence indicators of code injection.
-
-### 🔐 K-Anonymity (Privacy Guard)
-To protect user privacy while checking for breached emails or passwords, Meteor implements **K-Anonymity**:
-1. Hash the email/password locally using SHA-1.
-2. Take ONLY the first 5 characters (prefix).
-3. Send ONLY the prefix to the HIBP API.
-4. The API returns a list of suffix hashes.
-5. Meteor does the final matching locally.
-*Result: Your full email/password never leaves your machine.*
-
-### 🛡️ The Shield (Hardening Engine)
-The `HardeningEngine` audits system-level security parameters:
-- **ASLR Check**: Ensures `/proc/sys/kernel/randomize_va_space` is set to `2`.
-- **Network Stack**: Audits `rp_filter` (IP Spoofing) and `accept_redirects` (MITM prevention).
-
-## 🪐 Nebula UI System
-The UI uses `rich.layout` to create a non-linear dashboard. It partitions the screen into regions, allowing us to display hardware vulnerabilities alongside network exposure for a better overview.
+### Development Rules
+1.  **Always use Providers** for any OS-level calls (e.g., `psutil`, `scapy`).
+2.  **Maintain K-Anonymity** for all identity/breach checks.
+3.  **Modular Everything**: Engines must be testable without the CLI.
 
 ---
-
-## 🛠️ Contribution Rules
-1. **SOLID Only**: Never add OS-specific code directly to a Core engine. Add it to a Provider.
-2. **Modular Engines**: Each engine should be able to run independently of the CLI context.
-3. **Security First**: Always use K-Anonymity for any external API requests involving personal data.
+*For the strategic vision of Spark Systems and the upcoming Mesh-War project, see [Chapter 1](dev_book/01_mission.md) and [Chapter 6](dev_book/06_wireless_intel_future.md) of the handbook.*

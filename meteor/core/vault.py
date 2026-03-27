@@ -15,7 +15,7 @@ class EncryptedVault:
     VAULT_FILE = os.path.expanduser("~/.meteor_vault.json")
     SALT_FILE = os.path.expanduser("~/.meteor_salt")
     # Provider Registry
-    REGISTERED_PROVIDERS = ["shodan", "breachdirectory", "hibp"]
+    REGISTERED_PROVIDERS = ["shodan", "breachdirectory", "hibp", "virustotal", "abuseipdb", "otx"]
 
     def __init__(self, master_password: str):
         self.key = self._derive_key(master_password)

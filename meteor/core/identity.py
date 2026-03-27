@@ -49,9 +49,26 @@ class IdentityGuard:
         if not api_key:
             return {"error": "BreachDirectory key not found.", "status": "failed"}
         
+        from ..external.breachdirectory import BreachDirectoryClient
+        client = BreachDirectoryClient(api_key)
+        result = client.check_email(email)
+        
+        if "error" in result:
+            return result
+            
+        # Transform result for consistent output
+        breaches = result if isinstance(result, list) else result.get("result", [])
+        if breaches:
+            return {
+                "status": "success",
+                "message": f"CRITICAL: Found {len(breaches)} breaches for '{email}'!",
+                "breaches": breaches,
+                "provider": "breachdirectory"
+            }
+        
         return {
             "status": "success",
-            "message": f"Simulated BreachDirectory API Check for '{email}'. No breaches found.",
+            "message": f"No breaches found for '{email}' in BreachDirectory.",
             "provider": "breachdirectory"
         }
 

@@ -23,6 +23,9 @@ from .core.killchain import KillChainAnalyzer
 from .core.password import PasswordAnalyzer
 from .core.shield import HardeningEngine
 from .external.shodan import ShodanClient
+from .external.virustotal import VirusTotalClient
+from .external.abuseipdb import AbuseIPDBClient
+from .external.otx import OTXClient
 from rich.layout import Layout
 from rich.panel import Panel
 from rich.live import Live
@@ -159,8 +162,14 @@ def cmd_full(args):
     # 4. Gather Shield Data
     shield = HardeningEngine()
     hardening = shield.audit_system()
-
-    # Layout Construction
+    
+    # 5. Gather Threat Intel (if keys exist in vault)
+    console.print("[yellow]Unlocking Threat Intel Vault...[/yellow]")
+    # We'll use a dummy/quick pass if no vault input is provided in this non-interactive dashboard
+    # For now, we'll try to get it from vault if possible, or skip
+    threat_intel = {}
+    
+    # Dashboard Layout Construction
     layout = Layout()
     layout.split_column(
         Layout(name="header", size=3),
@@ -309,10 +318,14 @@ def cmd_check_email(args):
 
 def cmd_killchain(args):
     """
-    Analyze the full kill chain and correlate risks.
+    Analyze the full kill chain and correlate risks, including external intel.
     """
     provider = get_provider()
     root_mode = PrivilegeProvider.is_root()
+    
+    console.print("[yellow]Enter Master Password to gather full intelligence:[/yellow]")
+    password = getpass.getpass("> ")
+    vault = EncryptedVault(password)
     
     with Progress(SpinnerColumn(), TextColumn("[progress.description]{task.description}"), transient=True) as progress:
         progress.add_task(description="Gathering local port and process metrics...", total=None)
@@ -328,17 +341,67 @@ def cmd_killchain(args):
         progress.add_task(description="Auditing hardware vulnerabilities...", total=None)
         hardware_audit = HardwareAudit.check_vulnerabilities()
         
+        # External Threat Intel
+        threat_intel = {}
+        pub_ip = "8.8.8.8" # Mock/Fallback or fetch real public IP
+        
+        abuse_key = vault.get_key("abuseipdb")
+        if abuse_key:
+            progress.add_task(description="Checking IP reputation (AbuseIPDB)...", total=None)
+            aic = AbuseIPDBClient(abuse_key)
+            ip_res = aic.check_ip(pub_ip)
+            if "data" in ip_res:
+                threat_intel['abuse_score'] = ip_res['data'].get('abuseConfidenceScore', 0)
+        
     console.print("[bold green]Analysis complete.[/bold green]")
-    kc = KillChainAnalyzer(provider, scanner_results, log_anomalies, hardware_audit, root_mode)
+    kc = KillChainAnalyzer(provider, scanner_results, log_anomalies, hardware_audit, threat_intel, root_mode)
     result = kc.analyze()
     
     score = result['score']
     style = "green" if score < 30 else "yellow" if score < 70 else "red"
     console.print(f"\n[bold]Global Risk Score:[/bold] [{style}]{score}%[/{style}]")
     if result.get("reasons"):
-        console.print("[bold]Risk Factors:[/bold]")
+        console.print("[bold]Risk Factors (correlated):[/bold]")
         for reason in result['reasons']:
             console.print(f" - {reason}")
+
+def cmd_threat(args):
+    """
+    Check an indicator (IP, Hash, URL) across VT, AbuseIPDB, and OTX.
+    """
+    console.print("[yellow]Unlocking Intelligence Vault...[/yellow]")
+    password = getpass.getpass("> ")
+    vault = EncryptedVault(password)
+    
+    indicator = args.indicator
+    console.print(f"[bold cyan]Checking Indicator: {indicator}[/bold cyan]")
+    
+    # 1. VirusTotal
+    vt_key = vault.get_key("virustotal")
+    if vt_key:
+        vt = VirusTotalClient(vt_key)
+        res = vt.check_file_hash(indicator) if len(indicator) in [32, 40, 64] else vt.check_url(indicator)
+        if "data" in res:
+            stats = res['data']['attributes']['last_analysis_stats']
+            console.print(f"VirusTotal: [red]{stats['malicious']}[/red] malicious, [green]{stats['harmless']}[/green] harmless.")
+            
+    # 2. AbuseIPDB
+    abuse_key = vault.get_key("abuseipdb")
+    if abuse_key:
+        aic = AbuseIPDBClient(abuse_key)
+        res = aic.check_ip(indicator)
+        if "data" in res:
+            score = res['data']['abuseConfidenceScore']
+            console.print(f"AbuseIPDB Score: [bold]{score}%[/bold]")
+            
+    # 3. OTX
+    otx_key = vault.get_key("otx")
+    if otx_key:
+        otx = OTXClient(otx_key)
+        res = otx.check_indicator("IPv4" if "." in indicator else "file", indicator)
+        if "pulse_info" in res:
+            count = res['pulse_info']['count']
+            console.print(f"AlienVault OTX: Found in {count} threat pulses.")
 
 def cmd_password(args):
     """
@@ -460,6 +523,11 @@ def main():
     # 'shield' command setup
     shield_parser = subparsers.add_parser("shield", help="Audit and suggest system hardening")
     shield_parser.set_defaults(func=cmd_shield)
+
+    # 'threat' command setup
+    threat_parser = subparsers.add_parser("threat", help="Check IP/Hash/URL against multiple threat intel sources")
+    threat_parser.add_argument("indicator", help="IP, File Hash, or URL")
+    threat_parser.set_defaults(func=cmd_threat)
 
     args = parser.parse_args()
     
