@@ -1,85 +1,120 @@
-# Meteor Security CLI
+<div align="center">
+  <h1>Meteor Security CLI</h1>
+  <p><strong>Advanced Technical Diagnostics & Security Intelligence Monitoring</strong></p>
+
+  <p>
+    <img src="https://img.shields.io/badge/Security_Engine-Advanced-E01E5A?style=for-the-badge" alt="Security Engine">
+    <img src="https://img.shields.io/badge/Status-Operational-FFA500?style=for-the-badge" alt="Status">
+    <img src="https://img.shields.io/badge/Environment-Linux%2FAgnostic-000000?style=for-the-badge" alt="Environment">
+    <img src="https://img.shields.io/badge/License-MIT-000000?style=for-the-badge" alt="License">
+  </p>
+
+  <hr />
+
+  <p>
+    Meteor is a Python-based Command Line Interface (CLI) engineered for high-fidelity system diagnostics, network surveillance, and vulnerability detection. Built upon <strong>SOLID principles</strong> and a modular architecture, it provides security professionals with a robust framework for auditing local and external threat landscapes.
+  </p>
+</div>
+
+## Core Features
+
+1.  **Network Surveillance & Port Auditing**: High-performance monitoring of open TCP/UDP ports to identify active background listeners.
+2.  **Process-to-Port Correlation**: Seamless mapping of open ports to active Process Identifiers (PID) and their executable paths.
+3.  **Security Log Intelligence**: Continuous analysis of system authorization logs (e.g., `/var/log/auth.log`) to detect suspicious entry patterns and log-tampering attempts.
+4.  **External Threat Intelligence (Shodan)**: Deep integration with the Shodan API to retrieve comprehensive risk reports for public-facing IP addresses.
+5.  **Secure Credential Management (AES-256)**: An encrypted vault protected by PBKDF2-derived master passwords, ensuring sensitive API keys remain confidential.
+6.  **Low-Level Hardware Diagnostics**: Direct inspection of CPU vulnerabilities including Spectre, Meltdown, and L1TF via kernel-level interfaces.
+7.  **Data Breach & Exposure Analysis**: Identity guarding through K-Anonymity (SHA-1 hashing) to check for email exposure in global breach datasets without compromising privacy.
+8.  **Global Threat Correlation Engine**: A centralized Kill Chain Analyzer that aggregates results from scanners, logs, and hardware audits to generate a composite Global Risk Score (0-100%).
+9.  **Cryptographic Strength Evaluation**: Interactive password entropy analysis and crack-time estimation against modern high-speed GPU dictionaries.
+10. **Privileged Deep Inspection (Combat Mode)**: Advanced functionality activated under Root privileges, enabling raw packet SYN scanning and process memory integrity checks.
+
+---
+
+## Installation
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/your-username/meteor.git
+cd meteor
+
+# 2. Initialize virtual environment (recommended)
+python3 -m venv venv
+source venv/bin/activate
+
+# 3. Install core dependencies and CLI
+pip install -e .
+```
+
+---
+
+## Usage
+
+Once installed, the `meteor` command can be executed directly from your terminal:
+
+```bash
+# Execute local diagnostic scan (Ports & Security Patterns)
+meteor scan
+
+# Analyze authorization logs for suspicious activity
+meteor logs
+
+# Perform external IP threat assessment using Shodan
+meteor shodan --key <YOUR_SHODAN_API_KEY> --ip <TARGET_IP>
+
+# Generate a Comprehensive Intelligence Report
+meteor full --key <YOUR_SHODAN_API_KEY> --ip <TARGET_IP>
+
+# Manage Secure Vault (Add Encrypted API Credentials)
+meteor vault add shodan
+
+# Execute Hardware Vulnerability Audit
+meteor hardware
+
+# Verify Email Exposure in Known Data Breaches
+meteor check-email user@example.com
+
+# Execute Kill Chain Correlation Analysis
+meteor killchain
+
+# Evaluate Password Entropy & Cryptographic Vigor
+meteor password
+```
+
+---
 
 <div align="center">
-  <h3>Modular CLI tool for port scanning, process mapping, log analysis, and Shodan integration</h3>
+  <h3>Advanced Deep Analysis (Combat Mode)</h3>
+  <p>
+    When executed with elevated privileges (<code>sudo</code>) on Linux systems, Meteor activates its high-intensity diagnostic engine:
+  </p>
+  <ul style="list-style: none;">
+    <li><strong>Process Integrity Verification</strong>: Cross-referencing memory maps with disk-based binaries to detect Process Hollowing.</li>
+    <li><strong>Advanced SYN Scanning</strong>: High-speed network reconnaissance utilizing raw TCP packet construction.</li>
+  </ul>
+  
+  <p>
+    <strong>Security Protocol</strong>: Accessing the encrypted vault or identity exposure checks requires the validation of the Master Password.
+  </p>
+  
+  <p>
+    <em>Note: Root privileges are recommended to ensure comprehensive access to protected process paths and authorization logs.</em>
+  </p>
 </div>
 
 ---
 
+<<<<<<< HEAD
+=======
+## Architecture & Contributions
+>>>>>>> 2d31342 (Added English Readem)
 
-## 🚀 المميزات الرئيسية (Features)
-1. **الماسح الضوئي للمنافذ (Port Scanning)**: رصد أسرع للمنافذ المحلية المفتوحة (TCP/UDP) للتحقق مما يستمع في الخلفية.
-2. **مدير العمليات (Process Mapping)**: ربط كل منفذ مفتوح بمعرّف العملية (PID) واستخراج مسارها التنفيذي (Executable Path).
-3. **محلل السجلات الأمنية (Log Analyzer)**: مسح مستمر وسريع لسجلات تفويض النظام (مثل `/var/log/syslog` و `/var/log/auth.log` في لينكس) للبحث عن أنماط مشبوهة (محاولات الدخول الفاشلة، عمليات تصفية السجل).
-4. **تكامل شودان (Shodan Integration)**: القدرة على استخدام مفتاح API الخاص بـ Shodan للحصول على تقرير المخاطر الخارجي لعنوان الـ IP العام.
-5. **الخزنة المشفرة (Encrypted Vault)**: نظام إدارة مفاتيح API محمي بتشفير AES-256 و PBKDF2، حيث تُشتق المفاتيح من كلمة مرور رئيسية (Master Password) لحماية بياناتك الحساسة.
-6. **فحص الهاردوير (Hardware Audit)**: تحليل مباشر لثغرات المعالج (CPU Vulnerabilities) مثل Spectre و Meltdown عبر واجهات نظام لينكس العميقة.
-7. **حارس الهوية (Identity Guard)**: اكتشاف تسريبات البريد الإلكتروني باستخدام تقنية K-Anonymity (SHA-1 hashing) لضمان الخصوصية التامة أثناء فحص قواعد البيانات المسربة.
-8. **محلل سلسلة القتل (Kill Chain Analyzer)**: محرك ارتباط متقدم يجمع نتائج فحص المنافذ، السجلات، وثغرات الهاردوير ليعطيك "درجة خطر عالمية" (Global Risk Score) من 0-100%.
-9. **محلل كلمات المرور (Password Analyzer)**: تقييم تفاعلي لقوة كلمة المرور، حساب زمن الكسر التقني، والتحقق من وجودها في قواميس الاختراق العالمية.
-10. **الوضع القتالي (Combat Mode)**: ميزة "الفحص العميق" (Deep Scanning) التي تفعل تلقائياً عند التشغيل بصلاحيات Root لاكتشاف حقن العمليات (Process Injection) وفحص الشبكة عبر حزم SYN الخام.
+Meteor is designed for extensibility. The core engine utilizes the **Provider Pattern**, allowing for seamless integration of new audit layers (e.g., Windows or Cloud providers) without altering the primary analysis logic.
 
-## 🛠️ التثبيت (Installation)
+To contribute, please fork the repository and implement new providers within the `providers/` directory.
 
-```bash
-# 1. نسخ المستودع
-git clone https://github.com/your-username/meteor.git
-cd meteor
+---
 
-# 2. إنشاء بيئة وهمية (اختياري لكن مستحسن)
-python3 -m venv venv
-source venv/bin/activate
-
-# 3. تثبيت المتطلبات والأداة داخلياً
-pip install -e .
-```
-
-## 💻 طريقة الاستخدام (Usage)
-
-بمجرد تثبيت الحزمة، يمكنك استخدام أمر `meteor` المباشر في الطرفية (Terminal):
-
-```bash
-# 1. التقرير المحلي: فحص المنافذ ومستوى خطورتها
-meteor scan
-
-# 2. فحص السجلات: جلب محاولات الدخول الفاشلة والأنشطة المشبوهة
-meteor logs
-
-# 3. فحص خارجي للـ IP باستخدام Shodan API 
-meteor shodan --key <YOUR_SHODAN_API_KEY> --ip <TARGET_IP>
-
-# 4. التقرير الشامل: يفعل كل الخصائص في آن واحد
-meteor full --key <YOUR_SHODAN_API_KEY> --ip <TARGET_IP>
-
-# 5. إدارة الخزنة: إضافة مفتاح API مشفر
-meteor vault add shodan
-
-# 6. فحص الهاردوير: التأكد من سلامة المعالج
-meteor hardware
-
-# 7. فحص البريد: التأكد من عدم تسريب إيميلك
-meteor check-email user@example.com
-
-# 8. تحليل سلسلة القتل: تقرير الارتباط الشامل ودرجة الخطر
-meteor killchain
-
-# 9. فحص كلمة المرور: تقييم تفاعلي للقوة والزمن المتوقع للكسر
-meteor password
-```
-
-## 🛡️ الفحص العميق (Combat Mode)
-عند تشغيل Meteor بصلاحيات الجذر (`sudo`) على أنظمة لينكس، يتم تفعيل "الوضع القتالي" الذي يتيح:
-* **Process Integrity**: مقارنة مخرجات الذاكرة مع الملفات على القرص لاكتشاف (Process Hollowing).
-* **SYN Scanning**: فحص شبكي متطور عبر حزم TCP الخام (Raw Packets).
-
-> **تنبيه أمني:** لمزيد من الأمان، يتم طلب كلمة المرور الرئيسية (Master Password) عند محاولة الوصول للبيانات الحساسة في الخزنة أو فحص الإيميلات.
-
-> **ملاحظة:** لكي يتم تفعيل الفحص على كافة العمليات، يُفضل تشغيل الـ CLI بصلاحيات الإدارة (`sudo`) حتى لا يتم تقييد الأداة من قراءة مسارات العمليات المحمية أو سجلات التفويض `/var/log/auth.log`.
-> `sudo /path/to/venv/bin/meteor scan`
-
-## 📚 التوثيق المعماري الرسمي (Documentation)
-للمزيد من التفاصيل المعمارية حول كيفية تطبيق مبادئ `SOLID` داخل الكود المصدري، وطرق توسعة البرنامج لدعم أنظمة Windows و macOS باستخدام نظام "المزودين - Providers":
-- [إقرأ التوثيق الرسمي الشامل (بالعربية)](docs/official_documentation_ar.md)
-
-## 🤝 المساهمة (Contributing)
-للمساهمة، الرجاء عمل Fork للمستودع وإضافة `WindowsProvider` بداخل مجلد `providers/windows.py` لبرمجته ليتوافق مع أجهزة الويندوز دون كسر الطبقة الخاصة بالـ Core Engines.
+<div align="center">
+  <p>© Spark Systems | Powered by Advanced Security Analytics</p>
+</div>
