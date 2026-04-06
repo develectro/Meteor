@@ -5,7 +5,7 @@
   <p>
     <img src="https://img.shields.io/badge/Security_Engine-Advanced-E01E5A?style=for-the-badge" alt="Security Engine">
     <img src="https://img.shields.io/badge/Status-Operational-FFA500?style=for-the-badge" alt="Status">
-    <img src="https://img.shields.io/badge/Environment-Linux%2FAgnostic-000000?style=for-the-badge" alt="Environment">
+    <img src="https://img.shields.io/badge/Environment-Linux%2FCLI-000000?style=for-the-badge" alt="Environment">
     <img src="https://img.shields.io/badge/License-MIT-000000?style=for-the-badge" alt="License">
   </p>
 
