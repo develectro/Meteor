@@ -104,10 +104,9 @@ meteor password
 
 ---
 
-<<<<<<< HEAD
+
 =======
 ## Architecture & Contributions
->>>>>>> 2d31342 (Added English Readem)
 
 Meteor is designed for extensibility. The core engine utilizes the **Provider Pattern**, allowing for seamless integration of new audit layers (e.g., Windows or Cloud providers) without altering the primary analysis logic.
 
@@ -116,5 +115,5 @@ To contribute, please fork the repository and implement new providers within the
 ---
 
 <div align="center">
-  <p>© Spark Systems | Powered by Advanced Security Analytics</p>
+  <p>© Develectro | Powered by SparkSystems</p>
 </div>
